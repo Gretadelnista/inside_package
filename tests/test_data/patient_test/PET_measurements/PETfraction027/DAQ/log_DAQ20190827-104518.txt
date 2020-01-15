@@ -1,0 +1,53 @@
+---INSIDEDAQ v2---
+acquisition time 991.236 s
+total analysis time 997.758 s
+DAQ inspill-interspill threshold = 764 singles / 128 frames
+UDP packets
+	read 114377855
+	catched 99.9919%
+	wrong boardID 0 0%
+	lost because full buffer queue 0 0%
+	(received+missed) rate 115398 pkt/s
+	decoded 114377855
+	bad lenght 232
+	wrong header (DC check) 0
+
+frames
+	received 315092926
+	wrong boardID 18
+	right boardID 315092908
+	frameID too big 4
+	lost because frame buffer full 601 0.000190737%
+	lost because slow sender 0 0%
+	repeated 36432 0.0115623%
+	old fragments missed 192551 0.0611093%
+	filled and analysed 116179968
+events
+	correctly decoded 454132169
+	lost 763588 0.16786%
+	Time window 2 ns
+	Time window (Tfine units) = 61
+	singles acquired 454132127
+	coincidences 960704
+	multiple 0
+
+sent to monitoring
+	frames 50132
+	frames with coincidences 293293
+
+---decoder warnings
+buffer_full_size_0 10
+not_current_frame_chip 0
+wrong_word_case 704
+buffer_full_pop_failed 4
+frame_too_big 0
+---sender warnings
+forwarding 1/2048
+unable_to_send_frame 0
+long_frame 13
+old_last_received_frame 0
+---analyzer V2 warnings
+unable_to_send_LOR 0
+
+n_receivers= 2 n_decoders= 10 n_analysers= 10
+timeout 19968
