@@ -23,7 +23,7 @@ def binary_surface(volume_mask):
         
         Parameters
         ----------
-        volume_mask`: (M, N, P) array
+        volume_mask: (M, N, P) array
             Binary mask of a 3D volume, where the voxels belonging
             to it have value **True** (or 1).
             
@@ -109,7 +109,8 @@ def BEV(mask1, mask2, voxel_dim=1):
         
         Parameters
         ----------
-        mask1, mask2`: (M, N, P) array
+        mask1 : (M, N, P) array
+        mask2 : (M, N, P) array
             Binary masks of a volume of interest.
         voxel_dim : float, optional
             Physical voxel dimension.
@@ -178,7 +179,8 @@ def MP(image1, image2, mask=None, voxel_dim=1):
         
         Parameters
         ----------
-        image1, image2 : SimpleITK Image Object or filepath to images.
+        image1 : SimpleITK Image Object or filepath to images.
+        image2 : SimpleITK Image Object or filepath to images.
             Images to be compared.
         mask: (M, N) array, bool
             By default is **None**.
@@ -271,7 +273,8 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
         
         Parameters
         ----------
-        image1, image2`: SimpleITK Image Object or filepath to images.
+        image1 : SimpleITK Image Object or filepath to images.
+        image2 : SimpleITK Image Object or filepath to images.
             Images to compare.
         mask : (M, N) array, bool
             By default is **None**.
@@ -362,7 +365,8 @@ def RMSE(image1, image2, mask=None, voxel_dim=1.6):
         
         Parameters
         ----------
-        image1, image2`: SimpleITK Image Object or filepath to images.
+        image1 : SimpleITK Image Object or filepath to images.
+        image2 : SimpleITK Image Object or filepath to images.
             Images to compare.
         mask : (M, N) array, bool
             By default is **None**.

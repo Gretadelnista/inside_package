@@ -362,13 +362,13 @@ def opening(mask, er_radius=1, dil_radius=2):
             Input binary image.
         er_radius : int
             Erosion kernel radius. Its value in specified as pixel dimension,
-            i.e. `er_radius` = 1 correspond`s to 1.6 mm since
+            i.e. `er_radius` = 1 corresponds to 1.6 mm since
             the pixel dimensions is 1.6.
             (default 1)
         dil_radius : int
             Dilation kernel radius.
             Its value in specified as pixel dimension,
-            i.e. `dil_radius` = 1 correspond to 1.6 mm
+            i.e. `dil_radius` = 1 corresponds to 1.6 mm
             since the pixel dimensions is 1.6.
             (default 2)
        
@@ -469,7 +469,8 @@ def plot_profile(imgs, x_center=70, y_center=35, radius=0):
         ----------
         imgs : list or 3D - array
             List of input images or unique image as array.
-        x_center, y_center : uint, uint
+        x_center : uint
+        y_center : uint
             Pixel identification in the axial plane:
             x_center can be varied in the range [0, 139].
             y_center can be varied in the range [0, 70].
