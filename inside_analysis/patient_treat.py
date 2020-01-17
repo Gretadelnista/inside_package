@@ -86,25 +86,34 @@ class Patient():
             with PET scanner and return them as a list of string ID
             in the format ``001`` or ``001_2T`` in the case of first
             or second treatment's time.
-            
+            If folders :file:`{PET}fraction{number}` are not present,
+            it searches for :file:`PET_measurements\median` folder.
+            It fails if both of them are not present.
             Returns
             -------
             id : array - like
-                ID representing fraction's number, i.e. ``001``
+            ID representing fraction's number, i.e. ``001``
             id_2T : array - like
-                ID representing fraction's number
-                for the second treatment's time, i.e. ``001_2T``
-                
-                It's not empty if a second time has been irradiated.
-        """
-        ID = glob.glob(os.path.join(self.PETMainFolder, '*fraction*'))
-        p = 'fraction'
-        ID = np.asarray(sorted([i.replace(i, i[i.find(p)+len(p):]) for i in ID]))
-        ID_2T_mask = np.asarray([i.endswith('_2T') for i in ID])
-        ID_2T = ID[ID_2T_mask]
-        ID = ID[np.logical_not(ID_2T_mask)]
+            ID representing fraction's number
+            for the second treatment's time, i.e. ``001_2T``
+            
+            It's not empty if a second time has been irradiated.
+            """
+        try:
+            ID = glob.glob(os.path.join(self.PETMainFolder, '*fraction*'))
+            p = 'fraction'
+            ID = np.asarray(sorted([i.replace(i, i[i.find(p)+len(p):]) for i in ID]))
+            ID_2T_mask = np.asarray([i.endswith('_2T') for i in ID])
+            ID_2T = ID[ID_2T_mask]
+            ID = ID[np.logical_not(ID_2T_mask)]
+        except IndexError:
+            ID = glob.glob(os.path.join(self.PETMainFolder, 'median', '*.nii'))
+            ID = [os.path.split(i)[1] for i in ID]
+            ID = np.asarray(sorted([i.replace(i, i[:-4]) for i in ID]))
+            ID_2T_mask = np.asarray([i.endswith('_2T') for i in ID])
+            ID_2T = ID[ID_2T_mask]
+            ID = ID[np.logical_not(ID_2T_mask)]
         return ID, ID_2T
-
     
     def fraction_init(self):
         """
