@@ -142,13 +142,16 @@ def update(val):
     r = int(s_r.val)
     b = radio.value_selected
     zz, P, labels = plotting_profile(vars(patient_), f, x_center=x, y_center=y, radius=r, beam=b)
+    colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(labels))]
     ax.legend(labels)
     ax.set_title('Profile along beam direction. Neighborhood radius = {} pixels.'.format(r))
     try:
         for n, line in enumerate(ax.lines):
             line.set_ydata(P[:, n])
+            line.set_color(colors[n])
     except IndexError:
         ax.lines.set_ydata(P)
+        ax.lines.set_color(colors[0])
     fig.canvas.draw_idle()
 
 def reset(event):
@@ -177,6 +180,9 @@ def update_beam(label):
     ax.lines = ax.plot(zz, P, drawstyle='steps')
     ax.set_title('Neighborhood radius R = {} pixels.'.format(r))
     ax.legend(labels)
+    colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(labels))]
+    for n, line in enumerate(ax.lines):
+        line.set_color(colors[n])
     ax1.imshow(vars(patient_)[f][labels[0]].dds)
     fig.canvas.draw_idle()
 
@@ -223,6 +229,9 @@ if __name__ == '__main__':
     ax.set_position([0.4, 0.3, 0.5, 0.5])
     ax.set_title('Neighborhood radius R = {} pixels.'.format(r0))
     ax.plot(zz, P, drawstyle='steps')
+    colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(labels))]
+    for n, line in enumerate(ax.lines):
+        line.set_color(colors[n])
     ax.legend(labels)
     ax1 = fig.add_axes([0.01, 0.6, 0.3, 0.2])
     ax1.set_title('DDS mask')
