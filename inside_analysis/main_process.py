@@ -355,7 +355,7 @@ if __name__ == '__main__':
             _f.write('Fraction \t mean[mm] \t std[mm]\n')
         for beam_key in f_separated.keys():
             _1 = f_separated[beam_key][0]
-            _compared = f_separated[beam_key][1:]
+            _compared = f_separated[beam_key][1:]            
             for i in _compared:
                 shift_map = image_analysis.shift_method(_1.median_image, i.median_image,\
                                                         mask=_1.dds, voxel_dim=1.6)
@@ -365,7 +365,7 @@ if __name__ == '__main__':
                 plt.axis()
                 output_filename = '{}_{}vs{}.nii'.format(_1.beam, _1.fraction_number, i.fraction_number)
                 output = os.path.join(output_folder, output_filename)
-                dds_processing.mask_to_image(shift_map, output)
+                dds_processing.mask_to_image(shift_map.filled(), output)
                 with open(result_file, 'a') as _f:
                     _result = '{}vs{}\t{:.3f}\t{:.3f}\n'.format(
                                                                 _1.fraction_number,
@@ -373,5 +373,5 @@ if __name__ == '__main__':
                                                                 shift_map.mean(),
                                                                 shift_map.std())
                     _f.write(_result)
-
+            
     plt.show()

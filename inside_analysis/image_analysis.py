@@ -324,9 +324,10 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
                 data2_compared =  interp_function_data2(zz)
                 diff = np.sum((data1_compared - data2_compared)**2, axis=1)
                 map[y, x] = delta[np.argmin(diff)]*voxel_dim
-    if mask is not None:
+    try:
         mask_ = np.logical_not(mask)
-    else: mask_ = None
+    except TypeError:
+        mask_ = mask
     map_ma = ma.masked_array(map, mask_, fill_value=0)
     logging.info('Basic map describing statistics: {}'.format(stats.describe(map_ma.compressed())))
     return map_ma
@@ -362,7 +363,13 @@ def RMSE(image1, image2, mask=None, voxel_dim=1.6):
         voxel_dim : float
             Voxel physical dimension in mm.
             By default is set to 1.6 mm.
-
+            
+       Returns
+       -------
+       map_ma: (M, N) numpy.ma.core.MaskedArray
+        Map of the Root Mean Squared Error for each
+        point in the axial plane between
+        the two given images.
     """
     
     if isinstance(image1, sitk.SimpleITK.Image):    pass

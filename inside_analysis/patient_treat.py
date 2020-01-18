@@ -89,15 +89,15 @@ class Patient():
             If folders :file:`{PET}fraction{number}` are not present,
             it searches for :file:`PET_measurements/median` folder.
             It fails if both of them are not present.
+            
             Returns
             -------
             id : array - like
-            ID representing fraction's number, i.e. ``001``
+                ID representing fraction's number, i.e. ``001``
             id_2T : array - like
-            ID representing fraction's number
-            for the second treatment's time, i.e. ``001_2T``
-            
-            It's not empty if a second time has been irradiated.
+                |ID representing fraction's number
+                |for the second treatment's time, i.e. ``001_2T``
+                It's not empty if a second time has been irradiated.
             """
         try:
             ID = glob.glob(os.path.join(self.PETMainFolder, '*fraction*'))
@@ -479,9 +479,10 @@ def plot_profile(imgs, x_center=70, y_center=35, radius=0):
         imgs : list or 3D - array
             List of input images or unique image as array.
         x_center : uint
-        y_center : uint
-            Pixel identification in the axial plane:
+            Pixel identification in the axial plane, along x-axis:
             x_center can be varied in the range [0, 139].
+        y_center : uint
+            Pixel identification in the axial plane, along y-axis:
             y_center can be varied in the range [0, 70].
         radius : uint
             The mean profile is computed from (2*radius) * (2*radius) - 1
