@@ -87,7 +87,7 @@ class Patient():
             in the format ``001`` or ``001_2T`` in the case of first
             or second treatment's time.
             If folders :file:`{PET}fraction{number}` are not present,
-            it searches for :file:`PET_measurements\median` folder.
+            it searches for :file:`PET_measurements/median` folder.
             It fails if both of them are not present.
             Returns
             -------
