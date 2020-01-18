@@ -5,6 +5,7 @@ dds_processing
 ---------------
 
 Processing the Dose Delivery System output file, the binary mask of the irradiated points is computed: note that only the points inside the PET system's field of view are set to **True**, therefore the mask could be cut. 
+For instance, the map in figure .. figure:: image/map_uncut.png shows some rows of pixels in the upper part that are reflected being out from the FOV. The correct map, instead, is shown in .. figure:: image/map_cut.png. 
 FOV dimensions are specified as :func:`DDS_mask` arguments, so if necessary you can change them by :program:`dds_processing.py` source code: at the moment, they're set according to the actual INSIDE PET system's FOV dimension.
 In addition, the shape of the returned mask is set according to the shape of PET images, which is established by the algorithm of reconstruction: 165 x 70 x 140 voxels. 
 In any case,  you can change it from :mod:`patient_treat` source code, where they're specified as global variable (``FOV_Z_DIM``,  ``FOV_Y_DIM``  and  ``FOV_X_DIM``,  respectively).
@@ -32,7 +33,8 @@ Additional information are given in :mod:`main_process`.
 
 You can perform both *Middle Point* (MP) and *Beam Eye's View* (BEV) analysis: 
 the resulting maps are saved in the main folder. 
-In the case of BEV analysis, you must specified the thresholds that you want to use to extract the binary surface from the median images. 
+In the case of BEV analysis, you must specified the thresholds that you want to use to extract the binary surface from the median images. The program will ask you for that.
+In addition, you can perform *Shift Method* analysis: for each point in the axial plane, the profile of the compared image is shifted with respect to the profile of the first image in order to minimize the mean squared difference between them.
 See also :mod:`image_analysis` for details about the methods' implementation.
 
 Note that if more than one time is acquired, i.e. T1 and T2, the program has to be run at least twice with the option ``--T2`` when you want to analyse the second time.
