@@ -5,7 +5,6 @@ dds_processing
 ---------------
 
 Processing the Dose Delivery System output file, the binary mask of the irradiated points is computed: note that only the points inside the PET system's field of view are set to **True**, therefore the mask could be cut. 
-For instance, the map in figure .. figure:: image/map_uncut.png shows some rows of pixels in the upper part that are reflected being out from the FOV. The correct map, instead, is shown in .. figure:: image/map_cut.png. 
 FOV dimensions are specified as :func:`DDS_mask` arguments, so if necessary you can change them by :program:`dds_processing.py` source code: at the moment, they're set according to the actual INSIDE PET system's FOV dimension.
 In addition, the shape of the returned mask is set according to the shape of PET images, which is established by the algorithm of reconstruction: 165 x 70 x 140 voxels. 
 In any case,  you can change it from :mod:`patient_treat` source code, where they're specified as global variable (``FOV_Z_DIM``,  ``FOV_Y_DIM``  and  ``FOV_X_DIM``,  respectively).
