@@ -201,6 +201,8 @@ parser.add_argument('--mp', action='store_true',\
                     help='Perform middle point analysis. Default is False.')
 parser.add_argument('--bev', action='store_true',\
                     help='Perform BEV analysis. Default is False.')
+parser.add_argument('--shift_method', action='store_true',\
+                    help='Perform Shift Method analysis. Default is False.')
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -277,7 +279,8 @@ if __name__ == '__main__':
             _1 = f_separated[beam_key][0]
             _compared = f_separated[beam_key][1:]
             for i in _compared:
-                mp_map = image_analysis.MP(_1.median_image, i.median_image, mask=_1.dds, voxel_dim=1.6)
+                mp_map = image_analysis.MP(_1.median_image, i.median_image, \
+                                           mask=_1.dds, voxel_dim=1.6)
                 plt.figure(i.fraction_number)
                 plt.imshow(mp_map, cmap='RdBu_r', vmin=-16, vmax=16)
                 plt.colorbar()
@@ -334,6 +337,41 @@ if __name__ == '__main__':
                                                                     range_map.mean(),
                                                                     range_map.std())
                         _f.write(_result)
-    
-    
+
+    if args.shift_method:
+        patient_d = vars(patient_)
+        fraction_ = patient_d[f]
+        f_separated = {beam_key:[] for beam_key in beam_}
+        for i in fraction_:
+            f_separated[fraction_[i].beam].append(fraction_[i])
+            output_folder ='map_SHIFT'
+            output_folder = os.path.join(patient_.mainFolder, output_folder)
+            result_file = os.path.join(output_folder, 'SHIFT_result.txt')
+        try:
+            os.mkdir(output_folder)
+        except FileExistsError:
+            pass
+        with open(result_file, 'a') as _f:
+            _f.write('Fraction \t mean[mm] \t std[mm]\n')
+        for beam_key in f_separated.keys():
+            _1 = f_separated[beam_key][0]
+            _compared = f_separated[beam_key][1:]
+            for i in _compared:
+                shift_map = image_analysis.shift_method(_1.median_image, i.median_image,\
+                                                        mask=_1.dds, voxel_dim=1.6)
+                plt.figure(i.fraction_number)
+                plt.imshow(shift_map, cmap='RdBu_r', vmin=-16, vmax=16)
+                plt.colorbar()
+                plt.axis()
+                output_filename = '{}_{}vs{}.nii'.format(_1.beam, _1.fraction_number, i.fraction_number)
+                output = os.path.join(output_folder, output_filename)
+                dds_processing.mask_to_image(shift_map, output)
+                with open(result_file, 'a') as _f:
+                    _result = '{}vs{}\t{:.3f}\t{:.3f}\n'.format(
+                                                                _1.fraction_number,
+                                                                i.fraction_number,
+                                                                shift_map.mean(),
+                                                                shift_map.std())
+                    _f.write(_result)
+
     plt.show()

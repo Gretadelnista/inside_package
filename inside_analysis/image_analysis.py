@@ -303,7 +303,6 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
     id_20 = np.greater_equal(data1, np.amax(data1, axis=0)*0.2)
     id_3 = np.less_equal(data1, np.amax(data1, axis=0)*0.03)
     map = np.zeros((_shape[1], _shape[2]))
-    map_RMSE = np.zeros((_shape[1], _shape[2]))
     for y in range(1, _shape[1] - 1):
         for x in range (1, _shape[2] - 1):
             if not id_20[:, y, x].all() and np.amax(data1[:, y, x]) > 0.2*np.amax(data1):
@@ -316,25 +315,13 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
                 tmp = np.amax(np.nonzero(id_20[:, y, x]))
                 start_point = tmp - int(10/voxel_dim)   #   start_point is located 1cm before 20% activity.
                 tmp_ = np.nonzero(id_3[:, y, x])[0]
-                end_point = np.amin(tmp_[tmp_>tmp])     #   end_point is located at 3% activity (if possible)
-                
-                try:
-                    
-                    zz = np.arange(start_point, end_point - 1, 0.5)
-                    data1_compared = np.repeat(interp_function_data1(zz)[np.newaxis, :],\
+                end_point = _shape[0] - max(delta) - 1
+                zz = np.arange(start_point, end_point, 0.5)
+                data1_compared = np.repeat(interp_function_data1(zz)[np.newaxis, :],\
                                   len(delta), axis=0)
-                    zz = np.repeat(zz[np.newaxis, :],\
+                zz = np.repeat(zz[np.newaxis, :],\
                                    len(delta), axis=0) - np.vstack(delta)
-                    data2_compared =  interp_function_data2(zz)
-                except ValueError:
-                    
-                    zz = np.arange(start_point, _shape[0] - max(delta) - 1, 0.5)
-                    data1_compared = np.repeat(interp_function_data1(zz)[np.newaxis, :],\
-                                               len(delta), axis=0)
-                    zz = np.repeat(zz[np.newaxis, :],\
-                                   len(delta), axis=0) - np.vstack(delta)
-                    data2_compared =  interp_function_data2(zz)
-                
+                data2_compared =  interp_function_data2(zz)
                 diff = np.sum((data1_compared - data2_compared)**2, axis=1)
                 map[y, x] = delta[np.argmin(diff)]*voxel_dim
     if mask is not None:
