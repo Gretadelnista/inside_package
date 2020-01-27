@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import SimpleITK as sitk
 
 
-_DESCRIPTION = """ Processing Dose Delivey System output. """
+_DESCRIPTION = """ Processing Dose Delivey System output file. """
 
 def decoding(input_file, output_file=None):
     """
@@ -169,8 +169,8 @@ parser = argparse.ArgumentParser(description=_DESCRIPTION)
 parser.add_argument('file', help='DDS file output (.txt)')
 parser.add_argument('-o', '--outputFile_path_coords',
                     default = None,
-                    help='Output file (absolute path).')
-parser.add_argument('-m', '--mask_filename', help='mask image output file.')
+                    help='Coordinates\' output file (absolute path).')
+parser.add_argument('-m', '--mask_filename', help='Mask image output file.')
 
 if __name__ == '__main__':
 

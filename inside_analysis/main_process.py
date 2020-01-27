@@ -190,13 +190,13 @@ parser = argparse.ArgumentParser(description=_DESCRIPTION)
 parser.add_argument('patient_ID', help='Patient ID, i.e. 001P, 001C.')
 parser.add_argument('patient_dir', help='Patient main folder.')
 parser.add_argument('--T2', action='store_true',\
-                    help='Perform analysis on T2 fractions.')
+                    help='Perform analyses on T2 fractions.')
 parser.add_argument('--beam', action='append',\
                     nargs='+', type=str, required=True,\
                     help='Beams ID, i.e. B1, B2, etc.')
 parser.add_argument('--mask', action='append',\
                     nargs='+', type=str, required=True,\
-                    help='DDS mask filepath (.nii). Provide them in the same order as beam.')
+                    help='DDS masks\' filepath (.nii). Provide them in the same order as beam.')
 parser.add_argument('--mp', action='store_true',\
                     help='Perform middle point analysis. Default is False.')
 parser.add_argument('--bev', action='store_true',\
