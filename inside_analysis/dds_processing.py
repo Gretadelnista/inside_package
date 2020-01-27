@@ -140,18 +140,18 @@ def mask_to_image(_mask, output_filename):
         _header = nib.nifti1.Nifti1Header.from_fileobj(header_file)
     _affine = _header.get_base_affine()
     _data_shape = _header.get_data_shape()
-    mask_3D = np.repeat(_mask[np.newaxis, :, :],\
+    mask_3d = np.repeat(_mask[np.newaxis, :, :],\
                         _data_shape[2], axis=0)
-    mask_3D = mask_3D.transpose(2, 1, 0).astype(int)
-    mask_3D_nii = nib.Nifti1Image(mask_3D,
+    mask_3d = mask_3d.transpose(2, 1, 0).astype(int)
+    mask_3d_nii = nib.Nifti1Image(mask_3d,
                                   _affine,
                                   _header)
     try:
-        nib.save(mask_3D_nii, output_filename)
+        nib.save(mask_3d_nii, output_filename)
     except nib.filebasedimages.ImageFileError:
         _name, _ext = os.path.splitext(output_filename)
         output_filename = output_filename.replace(_ext, '.nii')
-        nib.save(mask_3D_nii, output_filename)
+        nib.save(mask_3d_nii, output_filename)
     
     mask_reference = sitk.ReadImage(
                                     os.path.join(
@@ -159,9 +159,9 @@ def mask_to_image(_mask, output_filename):
                                                  'mask_reference.nii')
                                     )
 
-    mask_3D = sitk.ReadImage(output_filename)
-    mask_3D.CopyInformation(mask_reference)
-    sitk.WriteImage(mask_3D, output_filename)
+    mask_3d = sitk.ReadImage(output_filename)
+    mask_3d.CopyInformation(mask_reference)
+    sitk.WriteImage(mask_3d, output_filename)
     return
 
 

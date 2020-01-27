@@ -25,17 +25,17 @@ class Patient():
         Class rapresenting a patient's profile.
         
         The main folder must be structered as:
-            - mainFolder
-                - PET_measuremets
+            - main_folder
+                - PET_measurements
                 - DDS
                 - other subfolders, i.e. (DICOM)
         
         Parameters
         -----------
-        ID : str
+        id_ : str
             Patient ID in the format *001P* or *001C* for proton
             or carbon treatment, respectively.
-        mainFolder : str
+        main_folder : str
             Path to the main folder where all the objects related
             to the patient are stored (i.e. PET images, DDS mask, etc...).
         beam_dds : :class:`patient_treat.Fraction` arguments, dict
@@ -45,15 +45,15 @@ class Patient():
             where ``dds_mask`` is a (M, N) array-like or the path to a Nifti
             image.
     """
-    def __init__(self, ID, mainFolder, beam_dds={}):
+    def __init__(self, id_, main_folder, beam_dds={}):
         """
             Constructor.
         """
-        self.ID = ID
-        self.mainFolder = mainFolder
-        self.PETMainFolder = os.path.join(self.mainFolder, 'PET_measurements')
+        self.id_ = id_
+        self.main_folder = main_folder
+        self.pet_main_folder = os.path.join(self.main_folder, 'PET_measurements')
         self.beam_dds = beam_dds
-        self.fraction_id, self.fraction_id_2T = self.fractionID_init()
+        self.fraction_id, self.fraction_id_2T = self.fraction_id_init()
         self.fraction = {}
         self.fraction_2T = {}
         self.fraction_init()
@@ -66,7 +66,7 @@ class Patient():
         info = 'Patient {}:\n\
                 Beams: {}\n\
                 Total number of fractions: {} + {}'\
-                .format(self.ID, list(self.beam_dds.keys()),\
+                .format(self.id_, list(self.beam_dds.keys()),\
                         len(self.fraction_id), len(self.fraction_id_2T))
         return info
     
@@ -80,7 +80,7 @@ class Patient():
         return '\n{}\n\n{}\n\n{}\n{}' .format(self.__str__(), warning, fractions_info, fractions2T_info)
     
     
-    def fractionID_init(self):
+    def fraction_id_init(self):
         """
             Checks which treatment's fractions have been acquired
             with PET scanner and return them as a list of string ID
@@ -92,7 +92,7 @@ class Patient():
             
             Returns
             -------
-            id : array - like
+            id_ : array - like
                 ID representing fraction's number, i.e. ``001``
             id_2T : array - like
                 |ID representing fraction's number
@@ -100,20 +100,20 @@ class Patient():
                 It's not empty if a second time has been irradiated.
             """
         try:
-            ID = glob.glob(os.path.join(self.PETMainFolder, '*fraction*'))
+            id_ = glob.glob(os.path.join(self.pet_main_folder, '*fraction*'))
             p = 'fraction'
-            ID = np.asarray(sorted([i.replace(i, i[i.find(p)+len(p):]) for i in ID]))
-            ID_2T_mask = np.asarray([i.endswith('_2T') for i in ID])
-            ID_2T = ID[ID_2T_mask]
-            ID = ID[np.logical_not(ID_2T_mask)]
+            id_ = np.asarray(sorted([i.replace(i, i[i.find(p)+len(p):]) for i in id_]))
+            id_2T_mask = np.asarray([i.endswith('_2T') for i in id_])
+            id_2T = id_[id_2T_mask]
+            id_ = id_[np.logical_not(id_2T_mask)]
         except IndexError:
-            ID = glob.glob(os.path.join(self.PETMainFolder, 'median', '*.nii'))
-            ID = [os.path.split(i)[1] for i in ID]
-            ID = np.asarray(sorted([i.replace(i, i[:-4]) for i in ID]))
-            ID_2T_mask = np.asarray([i.endswith('_2T') for i in ID])
-            ID_2T = ID[ID_2T_mask]
-            ID = ID[np.logical_not(ID_2T_mask)]
-        return ID, ID_2T
+            id_ = glob.glob(os.path.join(self.pet_main_folder, 'median', '*.nii'))
+            id_ = [os.path.split(i)[1] for i in id_]
+            id_ = np.asarray(sorted([i.replace(i, i[:-4]) for i in id_]))
+            id_2T_mask = np.asarray([i.endswith('_2T') for i in id_])
+            id_2T = id_[id_2T_mask]
+            id_ = id_[np.logical_not(id_2T_mask)]
+        return id_, id_2T
     
     def fraction_init(self):
         """
@@ -138,7 +138,7 @@ class Patient():
             Both raw input PET image and median image are added
             if they exist or can be created. In the last case,
             the median image is also save in
-            :file:`{Patient.MainFolder}/PET_measurents/median/` as :file:`{fraction_id}.nii`,
+            :file:`{Patient.main_folder}/PET_measurents/median/` as :file:`{fraction_id}.nii`,
             i.e. :file:`{001}.nii`.
             
             Parameters
@@ -157,20 +157,20 @@ class Patient():
             folder = '*fraction{}'.format(_id)
             img = '*{}*_iter5subset1.gipl.gz'.format(_id)
             try:
-                raw_img = glob.glob(os.path.join(self.PETMainFolder,\
+                raw_img = glob.glob(os.path.join(self.pet_main_folder,\
                                                 folder,\
                                                 img))[0]
             except IndexError:
                 raw_img = None
             try:
                 img = '{}.nii'.format(_id)
-                med_img = glob.glob(os.path.join(self.PETMainFolder,\
+                med_img = glob.glob(os.path.join(self.pet_main_folder,\
                                                  'median',\
                                                  img))[0]
                 med_img = sitk.ReadImage(med_img)
             except IndexError:
                 if raw_img is not None:
-                    output_dir = os.path.join(self.PETMainFolder, 'median')
+                    output_dir = os.path.join(self.pet_main_folder, 'median')
                     if not os.access(output_dir, os.F_OK):
                         os.mkdir(output_dir)
                     med_img = get_median_image(raw_img, save=True,\
@@ -495,7 +495,7 @@ def plot_profile(imgs, x_center=70, y_center=35, radius=0):
         -------
         zz : 1D - array
             Position along beam direction in mm.
-        P : list of 1D - array or 1D - array
+        p : list of 1D - array or 1D - array
             List of intensity profiles computed
             for each image.
     """
@@ -510,15 +510,15 @@ def plot_profile(imgs, x_center=70, y_center=35, radius=0):
     if y1 < 0: y1 = y_center
     if y2 > (FOV_Y_DIM - 1): y2 = y_center
     try:
-        P = []
+        p = []
         for  img in imgs:
             img = img / np.amax(img)
-            P.append(np.mean(img[:, y1:y2, x1:x2], axis=(1, 2)))
-        P = np.transpose(P)
+            p.append(np.mean(img[:, y1:y2, x1:x2], axis=(1, 2)))
+        p = np.transpose(p)
     except IndexError:
         imgs = imgs / np.amax(imgs)
-        P = np.mean(imgs[:, y1:y2, x1:x2], axis=(1, 2))
-    return zz, P
+        p = np.mean(imgs[:, y1:y2, x1:x2], axis=(1, 2))
+    return zz, p
 
 
 

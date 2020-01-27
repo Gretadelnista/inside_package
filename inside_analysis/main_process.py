@@ -112,7 +112,7 @@ def plotting_profile(patient_dict, fraction_attribute, x_center, y_center, radiu
         zz: 1D-array
             Position along beam direction in mm.
             See also :func:`patient_treat.plot_profile`.
-        P: list of 1D-array
+        p: list of 1D-array
             List of intensity profiles computed for each
             image that matches both *fraction_attribute* and
             *beam* parameters.
@@ -127,8 +127,8 @@ def plotting_profile(patient_dict, fraction_attribute, x_center, y_center, radiu
         if patient_dict[f][n].beam == beam:
             imgs.append(sitk.GetArrayFromImage(patient_dict[f][n].median_image))
             labels.append(patient_dict[f][n].fraction_number)
-    zz, P = patient_treat.plot_profile(imgs, x_center=x_center, y_center=y_center, radius=radius)
-    return zz, P, labels
+    zz, p = patient_treat.plot_profile(imgs, x_center=x_center, y_center=y_center, radius=radius)
+    return zz, p, labels
 
 def update(val):
     """
@@ -141,16 +141,16 @@ def update(val):
     y = int(s_y.val)
     r = int(s_r.val)
     b = radio.value_selected
-    zz, P, labels = plotting_profile(vars(patient_), f, x_center=x, y_center=y, radius=r, beam=b)
+    zz, p, labels = plotting_profile(vars(patient_), f, x_center=x, y_center=y, radius=r, beam=b)
     colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(labels))]
     ax.legend(labels)
     ax.set_title('Profile along beam direction. Neighborhood radius = {} pixels.'.format(r))
     try:
         for n, line in enumerate(ax.lines):
-            line.set_ydata(P[:, n])
+            line.set_ydata(p[:, n])
             line.set_color(colors[n])
     except IndexError:
-        ax.lines.set_ydata(P)
+        ax.lines.set_ydata(p)
         ax.lines.set_color(colors[0])
     fig.canvas.draw_idle()
 
@@ -176,8 +176,8 @@ def update_beam(label):
     x = int(s_x.val)
     y = int(s_y.val)
     r = int(s_r.val)
-    zz, P, labels = plotting_profile(vars(patient_), f, x_center=x, y_center=y, radius=r, beam=label)
-    ax.lines = ax.plot(zz, P, drawstyle='steps')
+    zz, p, labels = plotting_profile(vars(patient_), f, x_center=x, y_center=y, radius=r, beam=label)
+    ax.lines = ax.plot(zz, p, drawstyle='steps')
     ax.set_title('Neighborhood radius R = {} pixels.'.format(r))
     ax.legend(labels)
     colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(labels))]
@@ -227,10 +227,10 @@ if __name__ == '__main__':
     delta_x = 1
     delta_y = 1
     delta_r = 1
-    zz, P, labels = plotting_profile(vars(patient_), f, x_center=x0, y_center=y0, radius=r0, beam=beam0)
+    zz, p, labels = plotting_profile(vars(patient_), f, x_center=x0, y_center=y0, radius=r0, beam=beam0)
     ax.set_position([0.4, 0.3, 0.5, 0.5])
     ax.set_title('Neighborhood radius R = {} pixels.'.format(r0))
-    ax.plot(zz, P, drawstyle='steps')
+    ax.plot(zz, p, drawstyle='steps')
     colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(labels))]
     for n, line in enumerate(ax.lines):
         line.set_color(colors[n])
@@ -267,7 +267,7 @@ if __name__ == '__main__':
         for i in fraction_:
             f_separated[fraction_[i].beam].append(fraction_[i])
         output_folder ='map_MP'
-        output_folder = os.path.join(patient_.mainFolder, output_folder)
+        output_folder = os.path.join(patient_.main_folder, output_folder)
         result_file = os.path.join(output_folder, 'MP_result.txt')
         try:
             os.mkdir(output_folder)
@@ -310,7 +310,7 @@ if __name__ == '__main__':
             for thr in thr_BEV[beam_key]:
                 thr = int(thr)
                 output_folder ='map_BEV_{}_perc'.format(thr)
-                output_folder = os.path.join(patient_.mainFolder, output_folder)
+                output_folder = os.path.join(patient_.main_folder, output_folder)
                 result_file = os.path.join(output_folder, 'BEV_result.txt')
                 try:
                     os.mkdir(output_folder)
@@ -345,7 +345,7 @@ if __name__ == '__main__':
         for i in fraction_:
             f_separated[fraction_[i].beam].append(fraction_[i])
             output_folder ='map_SHIFT'
-            output_folder = os.path.join(patient_.mainFolder, output_folder)
+            output_folder = os.path.join(patient_.main_folder, output_folder)
             result_file = os.path.join(output_folder, 'SHIFT_result.txt')
         try:
             os.mkdir(output_folder)
