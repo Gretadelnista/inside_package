@@ -12,19 +12,19 @@ _DESCRIPTION = """ Processing Dose Delivey System output file. """
 
 def decoding(input_file, output_file=None):
     """
-    Processes the :file:`Treatment{seriesNumber}.txt` Dose Delivery System(DDS)
+    Processes the :file:`Treatment{seriesNumber}.txt` Dose Delivery System\'s (DDS)
     output file and returns (x, y) coordinates
     for each irradiated point in unit of mm.
     
-    x, y axis refer to the DDS system of reference.
+    x-, y- axis refer to the DDS system of reference.
     
     Parameters
     ----------
     input_file : file, str
         Path to the DDS output file (.txt).
     output_file: filename, str, optional
-        Absolute path where saving
-        :func:`decoding` output.
+        Absolute path where to save
+        :func:`decoding`\'s output.
         By default, `x` and `y` arrays are not
         saved.
     
@@ -120,8 +120,8 @@ def DDS_mask(x, y, x_FOV_dim=224, y_FOV_dim=112, voxel_dim=1.6, x_shift=0, y_shi
 
 def mask_to_image(_mask, output_filename):
     """
-        Saves Dose Delivery System mask as image
-        adapting format to 'filename'.
+        Saves Dose Delivery System\'s mask as image
+        adapting its format to `filename`\'s specification.
         A 3D image is created with the same
         header as PET image acquired with INSIDE PET scanner.
         
@@ -131,9 +131,9 @@ def mask_to_image(_mask, output_filename):
             Mask to save,
             as returned by :func:`DDS_mask`.
         output_filename: str
-            Filename to save 3D-mask. If no image extension is
+            Filename where to save 3D-mask. If no image extension is
             provided or is not supported,
-            by default the image is saved in Nifti format `.nii`.
+            by default the image is saved in NIfTI format `.nii`.
     """
     
     with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'PET_header.txt'), 'br') as header_file:

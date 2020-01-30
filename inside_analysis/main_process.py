@@ -11,7 +11,7 @@ _DESCRIPTION = 'Treatment analysis.'
 
 def fraction_specification(T2):
     """
-        Return the rigth attribute
+        Returns the rigth attribute
         relative to fraction for Patient class
         instance.
         
@@ -43,14 +43,14 @@ def fraction_set(patient_dict, fraction_attribute, beam_list, mask_list):
     """
         Sets *beam* and *mask*
         for patient's fractions:
-        if more than one beam ID are provided
+        if more than one beam ID is provided
         by the user, it asks which fractions
         belong to each beam.
         
         Parameters
         ----------
         patient_dict : dict
-            Dictionary of :class:`patient_treat.Patient` instance.
+            :class:`patient_treat.Patient` instance passed as dictionary.
         fraction_attribute : str
             **fraction** or **fraction_2T**,
             as returned by :func:`fraction_specification`.
@@ -93,7 +93,7 @@ def plotting_profile(patient_dict, fraction_attribute, x_center, y_center, radiu
         Parameters
         ----------
         patient_dict: dict
-            Dictionary of :class:`patient_treat.Patient` instance.
+            :class:`patient_treat.Patient` instance passed as dictionary.
         fraction_attribute: str
             **fraction** or **fraction_2T** as returned by
             :func:`fraction_specification`.
@@ -105,20 +105,20 @@ def plotting_profile(patient_dict, fraction_attribute, x_center, y_center, radiu
             Number of pixel to take into account around
             point specified by *(x_center, y_center)*.
         beam: str
-            Beam ID.
+            Beam\'s ID.
         
         Returns
         -------
         zz: 1D-array
-            Position along beam direction in mm.
+            Position along beam\'s direction in mm.
             See also :func:`patient_treat.plot_profile`.
         p: list of 1D-array
-            List of intensity profiles computed for each
+            List of intensity\'s profiles computed for each
             image that matches both *fraction_attribute* and
             *beam* parameters.
             See also :func:`patient_treat.plot_profile`.
         labels: list
-            List of label in the same order as P.
+            List of labels in the same order as p.
     """
     f = fraction_attribute
     imgs = []
@@ -157,7 +157,7 @@ def update(val):
 def reset(event):
     """
         Callback function for interactive
-        mode profile plot: reset to initial
+        mode profile plot: resets to initial
         value.
     """
     s_x.reset()

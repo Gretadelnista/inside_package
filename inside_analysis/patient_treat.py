@@ -22,7 +22,7 @@ FOV_X_DIM = 140
 
 class Patient():
     """
-        Class rapresenting a patient's profile.
+        Class representing a patient's profile.
         
         The main folder must be structered as:
             - main_folder
@@ -40,9 +40,9 @@ class Patient():
             to the patient are stored (i.e. PET images, DDS mask, etc...).
         beam_dds : :class:`patient_treat.Fraction` arguments, dict
             Beam id and related dds mask that are passed to the
-            class:class:`patient_treat.Fraction` for further analysis.
+            class :class:`patient_treat.Fraction` for further analysis.
             They must be passed as ``beamID = dds_mask``,
-            where ``dds_mask`` is a (M, N) array-like or the path to a Nifti
+            where ``dds_mask`` is a (M, N) array-like or the path to a NIfTI
             image.
     """
     def __init__(self, id_, main_folder, beam_dds={}):
@@ -86,17 +86,17 @@ class Patient():
             with PET scanner and return them as a list of string ID
             in the format ``001`` or ``001_2T`` in the case of first
             or second treatment's time.
-            If folders :file:`{PET}fraction{number}` are not present,
+            If the folders :file:`{PET}fraction{number}` are not present,
             it searches for :file:`PET_measurements/median` folder.
-            It fails if both of them are not present.
+            It fails if both of them are absent.
             
             Returns
             -------
             id_ : array - like
                 ID representing fraction's number, i.e. ``001``
             id_2T : array - like
-                |ID representing fraction's number
-                |for the second treatment's time, i.e. ``001_2T``
+                ID representing fraction's number
+                for the second treatment's time, i.e. ``001_2T``
                 It's not empty if a second time has been irradiated.
             """
         try:
@@ -136,8 +136,8 @@ class Patient():
             Creates :class:`Fraction()` instances and adds them to
             :attr:`Patient.fraction` or :attr:`Patient.fraction_2T` dictionary.
             Both raw input PET image and median image are added
-            if they exist or can be created. In the last case,
-            the median image is also save in
+            if they exist or if the last can be created. In the last case,
+            the median image is also saved in
             :file:`{Patient.main_folder}/PET_measurents/median/` as :file:`{fraction_id}.nii`,
             i.e. :file:`{001}.nii`.
             
@@ -147,7 +147,7 @@ class Patient():
                 Array of fractions' IDs.
             ref: str
                 Class attribute: :attr:`fraction` or :attr:`fraction_2T`.
-                If `fraction`, :class:`Fraction()` instance is added to :attr:`Patient.fraction`
+                If *fraction*, :class:`Fraction()` instance is added to :attr:`Patient.fraction`
                 dictionary, otherwise to :attr:`Patient.fraction_2T` dictionary.
                 
         """
@@ -184,7 +184,7 @@ class Patient():
 
 class Fraction():
     """
-        Class rapresenting a treatment's fraction.
+        Class representing a treatment's fraction.
         
         It stores all the information for further
         analysis: acquired images, beam ID, DDS mask, etc.
@@ -195,27 +195,28 @@ class Fraction():
         threshold values with respect to the maximum
         intensity in the median image.
         
+        Parameters
+        ----------
+        fraction_number : str
+            It must be a string in the format *001*, *011*, *111*, etc.
+        beam : str
+            String that identifies the beam, i.e. *B1*, *B2*, etc.
+        raw_img_path : str
+            File path to raw image. (default = **None**)
+        med_img : str or SimpleITK Image Object.
+            Valid input values can be the file path to the median image or
+            a SimpleITK Image Object. (default = **None**)
+            If ``med_img`` is **None**, but the reference to the raw input image has been given,
+            (i.e. ``raw_img_path`` is not None), the :attr:`median_image` attribute is set with a default image computed using a radius of 5mm. in the three
+        direction.
+        dds_mask : str or 2D - array.
+            Valid input values can be the file path to the DDS mask saved as Nifti
+            or a 2D - array.
     """
     def __init__(self, fraction_number, beam=None, raw_img_path=None, med_img=None, dds_mask=None):
         """
             Constructor.
             
-            Parameters
-            ----------
-            fraction_number : str
-                It must be a string in the format *001*, *011*, *111*, etc.
-            beam : str
-                String that identifies the beam, i.e. *B1*, *B2*, etc.
-            raw_img_path : str
-                File path to raw image. (default = **None**)
-            med_img : str or SimpleITK Image Object.
-                Valid input values can be the file path to the median image or
-                a SimpleITK Image Object. (default = **None**)
-                If ``med_img`` is **None**, but the reference to the raw input image has been given,
-                (i.e. ``raw_img_path`` is not None), the :attr:`median_image` attribute is set with a default image computed using a radius of 5mm. in the three direction.
-            dds_mask : str or 2D - array.
-                Valid input values can be the file path to the DDS mask saved as Nifti
-                or a 2D - array.
         """
         self.fraction_number = fraction_number
         self.beam = beam
@@ -244,7 +245,7 @@ class Fraction():
     @property
     def raw_image(self):
         """
-            File path to original raw image.
+            File path to the original raw image.
             It's used to access to the original image
             and to perform various image processing,
             for instance Image Median Filter can be applied
@@ -267,7 +268,7 @@ class Fraction():
     def median_image(self):
         """
             SimpleITK ImageObject:
-            if not provided, a median image is computed from the
+            If not provided, a median image is computed from the
             raw image specified by its file path.
         """
         if self.__med_img is None:
@@ -281,7 +282,7 @@ class Fraction():
         """
             Returns a SimpleITK ImageObject:
             a median filter is applied to the input raw image.
-            The kernel dimension is specified by the ``radiu``.
+            The kernel dimension is specified by the ``radius``.
             
             Parameters
             ----------
@@ -321,9 +322,9 @@ class Fraction():
     @property
     def threshold_image(self):
         """
-            Returns volume binary mask
-            corresponding to computed threshold
-            as dictionary.
+            Returns a dict object that maps thresholds
+            with the corresponding volume binary mask.
+            The threshold requested has to be already computed.
         """
         return self.__thr
     
@@ -370,15 +371,15 @@ def opening(mask, er_radius=1, dil_radius=2):
         mask : ndarray, bool
             Input binary image.
         er_radius : int
-            Erosion kernel radius. Its value in specified as pixel dimension,
+            Erosion kernel\'s radius. Its value is specified as pixel dimension,
             i.e. `er_radius` = 1 corresponds to 1.6 mm since
-            the pixel dimensions is 1.6.
+            the pixel dimension is 1.6.
             (default 1)
         dil_radius : int
-            Dilation kernel radius.
-            Its value in specified as pixel dimension,
+            Dilation kernel\'s radius.
+            Its value is specified as pixel dimension,
             i.e. `dil_radius` = 1 corresponds to 1.6 mm
-            since the pixel dimensions is 1.6.
+            since the pixel dimension is 1.6.
             (default 2)
        
        Returns
@@ -419,16 +420,16 @@ def get_median_image(input_, radius=[5, 5, 5],
                      ):
     """
         Applies a 3D median filter to the original input image
-        with the specified ``radius`` in mm.
+        with the specified ``radius`` in pixel.
         Returns the final image as SimpleITK ImageObject.
         
         Parameters
         ----------
-        input : str
+        input_ : str
             Original image file path.
         radius: uint,  array_like
             Radius of the filter's kernel
-            (default 5 mm).
+            (default 5 pixel).
         save : bool
             Option to save final image.
             Default value is **False**.
@@ -437,7 +438,7 @@ def get_median_image(input_, radius=[5, 5, 5],
             If ``output_dir`` is not given, the final image is saved in
             the input file directory .
         output_filename : str, optional
-            Output image name with extension, i.e. `medianImage.nii`.
+            Output image\'s name with extension, i.e. `medianImage.nii`.
             If the output file name and extension are not specified,
             the output file name will be 'originalName_median' and
             the extension will be the same as the original
@@ -466,7 +467,7 @@ def get_median_image(input_, radius=[5, 5, 5],
 
 def plot_profile(imgs, x_center=70, y_center=35, radius=0):
     """
-        Computes intensity profiles along beam direction for each
+        Computes intensity\'s profiles along beam\'s direction for each
         given images:
         the position in the axial plane is specified by
         ``x_center`` and ``y_center``.
@@ -477,24 +478,24 @@ def plot_profile(imgs, x_center=70, y_center=35, radius=0):
         Parameters
         ----------
         imgs : list or 3D - array
-            List of input images or unique image as array.
+            List of input images or unique image passed as array.
         x_center : uint
             Pixel identification in the axial plane, along x-axis:
             x_center can be varied in the range [0, 139].
         y_center : uint
             Pixel identification in the axial plane, along y-axis:
-            y_center can be varied in the range [0, 70].
+            y_center can be varied in the range [0, 69].
         radius : uint
-            The mean profile is computed from (2*radius) * (2*radius) - 1
-            pixels around the central pixel [y_center, x_center].
-            i.e., if ``radius = 0`` (default) no mean is computed,
+            The mean profile is computed from :math:`(2 \cdot radius) \cdot (2 \cdot radius) - 1`
+            pixels around the central pixel [y_center, x_center]
+            (i.e., if ``radius = 0`` (default) no mean is computed,
             otherwise if ``radius = 2``, the mean profile is computed
-            taking into account for the eight pixels around the central one.
+            taking into account for the eight pixels around the central one).
             
         Returns
         -------
         zz : 1D - array
-            Position along beam direction in mm.
+            Position along beam\'s direction in mm.
         p : list of 1D - array or 1D - array
             List of intensity profiles computed
             for each image.

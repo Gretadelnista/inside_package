@@ -100,16 +100,17 @@ def end_point(binary_surface):
 def BEV(mask1, mask2, voxel_dim=1):
     """
         Creates a 2D range difference maps
-        comparing two 3D binary masks of a volume
+        comparing two 3D binary mask of a volume
         of interest: the range is computed along the axis 0.
         ``voxel_dim`` is the voxel dimension:
         if provided, the range is computed according
         to it, so the returned map is in physical dimension,
-        otherwise it's in voxel unit (by default, 'voxel_dim' = 1 ).
+        otherwise it's in voxel unit (by default, `voxel_dim` = 1 ).
         
         Parameters
         ----------
         mask1 : (M, N, P) array
+            Binary masks of a volume of interest.
         mask2 : (M, N, P) array
             Binary masks of a volume of interest.
         voxel_dim : float, optional
@@ -174,14 +175,15 @@ def MP(image1, image2, mask=None, voxel_dim=1):
         only the pixels that are set to **True**
         are considered valid.
         In addition, only the profiles with an integrated
-        activity above the 20% of the maximum
+        activity above the 20\% of the maximum
         integrated activity are taken into account.
         
         Parameters
         ----------
         image1 : SimpleITK Image Object or filepath to images.
+            First image to compare.
         image2 : SimpleITK Image Object or filepath to images.
-            Images to be compared.
+             Second image to compare.
         mask: (M, N) array, bool
             By default is **None**.
             Its shape has to match the images'
@@ -266,16 +268,17 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
         the differences are computed over the
         whole axial plane (with reference to the beam direction),
         otherwise the region of interest is restricted
-        to that defined by 'mask'.
-        In any case, only the profile with a maximum activity
-        above the 20% of the absolute maximum activity in the image
+        to that defined by ``mask``.
+        In any case, only the profiles with a maximum activity
+        above the 20 \% of the absolute maximum activity in the image
         are considered.
         
         Parameters
         ----------
         image1 : SimpleITK Image Object or filepath to images.
+            First image to compare.
         image2 : SimpleITK Image Object or filepath to images.
-            Images to compare.
+            Sexond image to compare.
         mask : (M, N) array, bool
             By default is **None**.
             Its shape has to match the images'
@@ -287,7 +290,7 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
         Returns
         -------
         map_ma : (M, N) numpy.ma.core.MaskedArray
-            Map of most likely shift between the
+            Map of the most likely shift between the
             two compared images.
     """
     
@@ -338,24 +341,25 @@ def RMSE(image1, image2, mask=None, voxel_dim=1.6):
     """
         Given two images,computes Root Mean Squared
         Error between each
-        profile along beam directions.
+        profile along the beam\'s directions.
         The comparision is made from 1 cm before
-        the 20 % profile's activity to the point
-        located at the 3 % activity.
+        the 20\% profile\'s activity to the point
+        located at the 3\% activity.
         If no ``mask`` is given,
         the RMSE is computed over the
         whole axial plane (with reference to the beam direction),
         otherwise the region of interest is restricted
-        to that defined by 'mask'.
-        In any case, only the profile with a maximum activity
-        above the 20% of the absolute maximum activity in the image
+        to that defined by ``mask``.
+        In any case, only the profiles with a maximum activity
+        above the 20\% of the absolute maximum activity in the image
         are considered.
         
         Parameters
         ----------
         image1 : SimpleITK Image Object or filepath to images.
+            First image to compare.
         image2 : SimpleITK Image Object or filepath to images.
-            Images to compare.
+            Second images to compare.
         mask : (M, N) array, bool
             By default is **None**.
             Its shape has to match the images'
