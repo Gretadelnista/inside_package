@@ -30,7 +30,7 @@ class Patient():
                 - DDS
                 - other subfolders, i.e. (DICOM)
         
-        Parameters
+        Attributes
         -----------
         id_ : str
             Patient ID in the format *001P* or *001C* for proton
@@ -195,7 +195,7 @@ class Fraction():
         threshold values with respect to the maximum
         intensity in the median image.
         
-        Parameters
+        Attributes
         ----------
         fraction_number : str
             It must be a string in the format *001*, *011*, *111*, etc.
@@ -208,7 +208,7 @@ class Fraction():
             a SimpleITK Image Object. (default = **None**)
             If ``med_img`` is **None**, but the reference to the raw input image has been given,
             (i.e. ``raw_img_path`` is not None), the :attr:`median_image` attribute is set with a default image computed using a radius of 5mm. in the three
-        direction.
+            direction.
         dds_mask : str or 2D - array.
             Valid input values can be the file path to the DDS mask saved as Nifti
             or a 2D - array.
@@ -384,8 +384,8 @@ def opening(mask, er_radius=1, dil_radius=2):
             (default 2)
         Returns
         -------
-            mask : ndarray, bool
-                Mask after performing opening operation.
+        mask : ndarray, bool
+            Mask after performing opening operation.
 
     """
     
