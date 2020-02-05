@@ -362,6 +362,7 @@ class Fraction():
 
 
 def opening(mask, er_radius=1, dil_radius=2):
+    
     """
         Performs the opening morphological operation
         of a binary image.
@@ -381,12 +382,13 @@ def opening(mask, er_radius=1, dil_radius=2):
             i.e. `dil_radius` = 1 corresponds to 1.6 mm
             since the pixel dimension is 1.6.
             (default 2)
-       
-       Returns
-       -------
-       mask : ndarray, bool
-            Mask after performing opening operation.
+        Returns
+        -------
+            mask : ndarray, bool
+                Mask after performing opening operation.
+
     """
+    
     struct_er = morphology.ball(er_radius)
     struct_dil = morphology.ball(dil_radius)
     mask = scipy.ndimage.binary_erosion(mask, struct_er)

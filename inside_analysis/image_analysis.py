@@ -368,12 +368,12 @@ def RMSE(image1, image2, mask=None, voxel_dim=1.6):
             Voxel physical dimension in mm.
             By default is set to 1.6 mm.
             
-       Returns
-       -------
-       map_ma: (M, N) numpy.ma.core.MaskedArray
-        Map of the Root Mean Squared Error for each
-        point in the axial plane between
-        the two given images.
+        Returns
+        -------
+        map_ma: (M, N) numpy.ma.core.MaskedArray
+            Map of the Root Mean Squared Error for each
+            point in the axial plane between
+            the two given images.
     """
     
     if isinstance(image1, sitk.SimpleITK.Image):    pass
