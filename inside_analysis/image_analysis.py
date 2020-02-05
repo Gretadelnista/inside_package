@@ -399,7 +399,11 @@ def RMSE(image1, image2, mask=None, voxel_dim=1.6):
                 tmp_ = np.nonzero(id_3[:, y, x])[0]
                 end_point = np.amin(tmp_[tmp_>tmp])     #   end_point is located at 3% activity (if possible
                 map[y, x] = metrics.mean_squared_error(d1[start_point:end_point + 1], d2[start_point:end_point + 1], squared=False)
-    map_ma = ma.masked_array(map, np.logical_not(mask), fill_value=0)
+    try:
+        mask_ = np.logical_not(mask)
+    except TypeError:
+        mask_ = mask
+    map_ma = ma.masked_array(map, mask_, fill_value=0)
     return map_ma
 
 
