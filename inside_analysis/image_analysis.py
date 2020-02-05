@@ -339,7 +339,7 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
 
 def RMSE(image1, image2, mask=None, voxel_dim=1.6):
     """
-        Given two images,computes Root Mean Squared
+        Given two images, computes Root Mean Squared
         Error between each
         profile along the beam\'s directions.
         The comparision is made from 1 cm before
@@ -362,7 +362,7 @@ def RMSE(image1, image2, mask=None, voxel_dim=1.6):
             Second images to compare.
         mask : (M, N) array, bool
             By default is **None**.
-            Its shape has to match the images'
+            Its shape has to match the images\'
             axial dimensions.
         voxel_dim : float
             Voxel physical dimension in mm.
