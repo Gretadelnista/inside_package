@@ -303,9 +303,11 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
     data2 = sitk.GetArrayFromImage(image2)
     _shape = data1.shape
     delta_limit_mm = 16 # delta interval limits [mm]
+    delta_limit_voxel = int(delta_limit_mm / voxel_dim)
     step_mm = 1 #step width [mm]
-    n_step = (delta_limit_mm*2)/step_mm # number of steps [mm]
-    delta = np.linspace(-int(delta_limit_mm/voxel_dim), int(delta_limit_mm/voxel_dim), endpoint=True, num=int(n_step*voxel_dim)) #   [voxel] 
+    n_step = int((delta_limit_voxel*2)*voxel_dim/step_mm) # number of steps in voxel
+    delta = np.linspace(-delta_limit_voxel, delta_limit_voxel,
+                        endpoint=True, num=n_step) #   [voxel]
     id_20 = np.greater_equal(data1, np.amax(data1, axis=0)*0.2)
     id_3 = np.less_equal(data1, np.amax(data1, axis=0)*0.03)
     map = np.zeros((_shape[1], _shape[2]))
