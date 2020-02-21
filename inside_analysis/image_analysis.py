@@ -302,7 +302,10 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
     data1 = sitk.GetArrayFromImage(image1)
     data2 = sitk.GetArrayFromImage(image2)
     _shape = data1.shape
-    delta = np.linspace(-10, 10, endpoint=True, num=320) #   [voxel] => 320 steps of 0.1 mm
+    delta_limit_mm = 16 # delta interval limits [mm]
+    step_mm = 1 #step width [mm]
+    n_step = (delta_limit_mm*2)/step_mm # number of steps [mm]
+    delta = np.linspace(-int(delta_limit_mm/voxel_dim), int(delta_limit_mm/voxel_dim), endpoint=True, num=int(n_step*voxel_dim)) #   [voxel] 
     id_20 = np.greater_equal(data1, np.amax(data1, axis=0)*0.2)
     id_3 = np.less_equal(data1, np.amax(data1, axis=0)*0.03)
     map = np.zeros((_shape[1], _shape[2]))
@@ -326,14 +329,18 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
                                    len(delta), axis=0) - np.vstack(delta)
                 data2_compared =  interp_function_data2(zz)
                 diff = np.sum((data1_compared - data2_compared)**2, axis=1)
+                
                 map[y, x] = delta[np.argmin(diff)]*voxel_dim
+    '''
     try:
         mask_ = np.logical_not(mask)
     except TypeError:
         mask_ = mask
     map_ma = ma.masked_array(map, mask_, fill_value=0)
-    logging.info('Basic map describing statistics: {}'.format(stats.describe(map_ma.compressed())))
+#logging.info('Basic map describing statistics: {}'.format(stats.describe(map_ma.compressed())))
     return map_ma
+    '''
+    return map
 
 
 

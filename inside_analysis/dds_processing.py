@@ -163,7 +163,6 @@ def mask_to_image(_mask, output_filename, input_header='PET_header.txt',
     mask_3d = sitk.ReadImage(output_filename)
     mask_3d.CopyInformation(mask_reference)
     sitk.WriteImage(mask_3d, output_filename)
-    
     return
 
 

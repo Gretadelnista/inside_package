@@ -22,8 +22,9 @@ def dds_rebinning(input_file):
     from inside_analysis import dds_processing as dds
     x, y = dds.decoding(input_file)
     mask = dds.DDS_mask(x, y, voxel_dim = 3.2)
-        #dds.mask_to_image(mask, 'DDS_mask_reb2x2.nii',
-        #             input_header='PET_header_reb2x2x2.bin')
+    dds.mask_to_image(mask, '_DDS_mask_reb2x2.nii',
+                     input_header='PET_header_reb2x2x2.bin',
+                     input_mask_reference='DDS_mask_reb2x2_reference.nii')
     return mask
 
 
@@ -64,9 +65,13 @@ if __name__ == '__main__':
     plt.xlabel('[mm]')
     plt.legend()
     '''
-    mask = dds_rebinning(sys.argv[1])
-    plt.figure('dds_mask')
-    plt.imshow(mask)
-    
+    list_input = glob.glob('/Users/gretadelnista/paziente_test/PETfraction*/*_iter5subset1.gipl.gz')
+    for input in list_input:
+        name = os.path.split(input)[1][:3]
+        img = sitk.ReadImage(input)
+        reb_img = rebinning(img)
+        med_img = median(reb_img)
+        sitk.WriteImage(reb_img, '/Users/gretadelnista/paziente_test/rebinning/raw/' + name + '.nii' )
+        sitk.WriteImage(med_img, '/Users/gretadelnista/paziente_test/rebinning/median_global/' + name + '.nii' )
     plt.show()
 
