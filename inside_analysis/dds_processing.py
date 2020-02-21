@@ -118,7 +118,7 @@ def DDS_mask(x, y, x_FOV_dim=224, y_FOV_dim=112, voxel_dim=1.6, x_shift=0, y_shi
     _mask = scipy.ndimage.binary_dilation(_mask, struct)
     return np.flip(_mask, axis=0)
 
-def mask_to_image(_mask, output_filename):
+def mask_to_image(_mask, output_filename, input_header='PET_header.txt'):
     """
         Saves Dose Delivery System\'s mask as image
         adapting its format to `filename`\'s specification.
@@ -136,7 +136,7 @@ def mask_to_image(_mask, output_filename):
             by default the image is saved in NIfTI format `.nii`.
     """
     
-    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'PET_header.txt'), 'br') as header_file:
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), input_header), 'br') as header_file:
         _header = nib.nifti1.Nifti1Header.from_fileobj(header_file)
     _affine = _header.get_base_affine()
     _data_shape = _header.get_data_shape()
