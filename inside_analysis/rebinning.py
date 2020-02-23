@@ -1,6 +1,8 @@
 import SimpleITK as sitk
 import matplotlib.pyplot as plt
 import numpy as np
+import nibabel as nib
+
 
 def rebinning(input_img, size=2):
     filter = sitk.BinShrinkImageFilter()
@@ -22,9 +24,9 @@ def dds_rebinning(input_file):
     from inside_analysis import dds_processing as dds
     x, y = dds.decoding(input_file)
     mask = dds.DDS_mask(x, y, voxel_dim = 3.2)
-    dds.mask_to_image(mask, '_DDS_mask_reb2x2.nii',
-                     input_header='PET_header_reb2x2x2.bin',
-                     input_mask_reference='DDS_mask_reb2x2_reference.nii')
+    mask_to_image(mask, '_DDS_mask_reb2x2.nii',
+                  input_header='PET_header_reb2x2x2.bin',
+                  input_mask_reference='DDS_mask_reb2x2_reference.nii')
     return mask
 
 
@@ -41,6 +43,52 @@ def process(input_file):
     med_array = sitk.GetArrayFromImage(median_img)
     return med_array, median_img
 
+
+def mask_to_image(_mask, output_filename, input_header='PET_header.txt',
+                  input_mask_reference='mask_reference.nii' ):
+    """
+        Saves Dose Delivery System\'s mask as image
+        adapting its format to `filename`\'s specification.
+        A 3D image is created with the same
+        header as PET image acquired with INSIDE PET scanner.
+        
+        Parameters
+        ----------
+        _mask: (M, N) - array, int or bool
+            Mask to save,
+            as returned by :func:`DDS_mask`.
+        output_filename: str
+            Filename where to save 3D-mask. If no image extension is
+            provided or is not supported,
+            by default the image is saved in NIfTI format `.nii`.
+    """
+    
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), input_header), 'br') as header_file:
+        _header = nib.nifti1.Nifti1Header.from_fileobj(header_file)
+    _affine = _header.get_base_affine()
+    _data_shape = _header.get_data_shape()
+    mask_3d = np.repeat(_mask[np.newaxis, :, :],\
+                        _data_shape[2], axis=0)
+    mask_3d = mask_3d.transpose(2, 1, 0).astype(int)
+    mask_3d_nii = nib.Nifti1Image(mask_3d,
+                                  _affine,
+                                  _header)
+    try:
+        nib.save(mask_3d_nii, output_filename)
+    except nib.filebasedimages.ImageFileError:
+        _name, _ext = os.path.splitext(output_filename)
+        output_filename = output_filename.replace(_ext, '.nii')
+        nib.save(mask_3d_nii, output_filename)
+
+    mask_reference = sitk.ReadImage(
+                                    os.path.join(
+                                                 os.path.dirname(os.path.realpath(__file__)),\
+                                                 input_mask_reference)
+                                    )
+    mask_3d = sitk.ReadImage(output_filename)
+    mask_3d.CopyInformation(mask_reference)
+    sitk.WriteImage(mask_3d, output_filename)
+    return
 
 
 if __name__ == '__main__':
@@ -65,6 +113,7 @@ if __name__ == '__main__':
     plt.xlabel('[mm]')
     plt.legend()
     '''
+    '''
     list_input = glob.glob('/Users/gretadelnista/paziente_test/PETfraction*/*_iter5subset1.gipl.gz')
     for input in list_input:
         name = os.path.split(input)[1][:3]
@@ -74,4 +123,5 @@ if __name__ == '__main__':
         sitk.WriteImage(reb_img, '/Users/gretadelnista/paziente_test/rebinning/raw/' + name + '.nii' )
         sitk.WriteImage(med_img, '/Users/gretadelnista/paziente_test/rebinning/median_global/' + name + '.nii' )
     plt.show()
-
+    '''
+    dds_rebinning('/Users/gretadelnista/paziente_001P/Treatment_20190716_183212_8407875E.txt')
