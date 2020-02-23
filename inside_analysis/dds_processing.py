@@ -118,7 +118,8 @@ def DDS_mask(x, y, x_FOV_dim=224, y_FOV_dim=112, voxel_dim=1.6, x_shift=0, y_shi
     _mask = scipy.ndimage.binary_dilation(_mask, struct)
     return np.flip(_mask, axis=0)
 
-def mask_to_image(_mask, output_filename, input_header='PET_header.txt',
+def mask_to_image(_mask, output_filename,
+                  input_header='PET_header.txt',
                   input_mask_reference='mask_reference.nii' ):
     """
         Saves Dose Delivery System\'s mask as image
