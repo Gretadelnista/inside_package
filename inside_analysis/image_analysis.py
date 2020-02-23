@@ -333,7 +333,7 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
                 diff = np.sum((data1_compared - data2_compared)**2, axis=1)
                 
                 map[y, x] = delta[np.argmin(diff)]*voxel_dim
-    '''
+    
     try:
         mask_ = np.logical_not(mask)
     except TypeError:
@@ -341,8 +341,8 @@ def shift_method(image1, image2, mask=None, voxel_dim=1.6):
     map_ma = ma.masked_array(map, mask_, fill_value=0)
 #logging.info('Basic map describing statistics: {}'.format(stats.describe(map_ma.compressed())))
     return map_ma
-    '''
-    return map
+
+#return map
 
 
 

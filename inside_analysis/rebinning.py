@@ -65,13 +65,13 @@ if __name__ == '__main__':
     plt.xlabel('[mm]')
     plt.legend()
     '''
-    list_input = glob.glob('/Users/gretadelnista/paziente_test/PETfraction*/*_iter5subset1.gipl.gz')
+    list_input = glob.glob('/Users/gretadelnista/paziente_001P/*fraction*/*_iter5subset1.gipl.gz')
     for input in list_input:
         name = os.path.split(input)[1][:3]
         img = sitk.ReadImage(input)
         reb_img = rebinning(img)
         med_img = median(reb_img)
-        sitk.WriteImage(reb_img, '/Users/gretadelnista/paziente_test/rebinning/raw/' + name + '.nii' )
-        sitk.WriteImage(med_img, '/Users/gretadelnista/paziente_test/rebinning/median_global/' + name + '.nii' )
+        sitk.WriteImage(reb_img, '/Users/gretadelnista/paziente_001P/rebinning/raw/' + name + '.nii' )
+        sitk.WriteImage(med_img, '/Users/gretadelnista/paziente_001P/rebinning/median_global/' + name + '.nii' )
     plt.show()
-
+#dds_rebinning('/Users/gretadelnista/paziente_001P/Treatment_20190716_183212_8407875E.txt')
