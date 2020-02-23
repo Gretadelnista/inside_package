@@ -64,15 +64,15 @@ if __name__=='__main__':
         name_img_1 = os.path.splitext(os.path.split(img)[1])[0]
         name_map = '{}vs{}.nii'.format(name_img_0, name_img_1)
         output_name = os.path.join(sys.argv[3], name_map)
-        mask1 = threshold(images[0], thr=10, dds_mask=dds_mask)
+        mask1 = threshold(images[0], thr=8, dds_mask=dds_mask)
         mask1[:30, :, :]=0 # elimino Range shift
-        mask2 = threshold(img, thr=10, dds_mask=dds_mask)
+        mask2 = threshold(img, thr=8, dds_mask=dds_mask)
         mask2[:30, :, :]=0 # elimino Range shift
         map = image_analysis.BEV(mask1, mask2, voxel_dim=3.2)
         dds_processing.mask_to_image(map, output_name,
                                      input_header='./PET_header_reb2x2x2.bin',
                                      input_mask_reference='./DDS_mask_reb2x2_reference.nii')
-    
-    
     '''
+    
+    
     plt.show()
