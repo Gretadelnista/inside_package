@@ -76,4 +76,4 @@ if __name__ == '__main__':
         sitk.WriteImage(med_img, '/Users/gretadelnista/paziente_001P/rebinning/median_global/' + name + '.nii' )
     plt.show()
     '''
-    dds_rebinning('/Users/gretadelnista/paziente_001P/Treatment_20190716_183212_8407875E.txt')
+    dds_rebinning('/Users/gretadelnista/paziente_002P/Treatment_20191007_152330_CC891C00.txt')

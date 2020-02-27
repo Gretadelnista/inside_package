@@ -120,7 +120,7 @@ def DDS_mask(x, y, x_FOV_dim=224, y_FOV_dim=112, voxel_dim=1.6, x_shift=0, y_shi
 
 def mask_to_image(_mask, output_filename,
                   input_header='PET_header.txt',
-                  input_mask_reference='mask_reference.nii' ):
+                  input_mask_reference='mask_reference.nii'):
     """
         Saves Dose Delivery System\'s mask as image
         adapting its format to `filename`\'s specification.
