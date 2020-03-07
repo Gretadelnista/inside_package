@@ -10,22 +10,25 @@ def map_analysis(map_folder, dds_path):
     dds_mask = sitk.GetArrayFromImage(sitk.ReadImage(dds_path))[0, :, :]
     maps = sorted(os.listdir(map_folder))
     maps = [map for map in maps if map.endswith('.nii')]
+    maps = [map for map in maps if not map.endswith('CT.nii')]
     with open(os.path.join(map_folder, 'Result.txt'), 'a') as result_file:
         result_file.write('Fraction \t mean [mm] \t FWHM[mm] \n')
     plt.figure()
     color=cm.rainbow(np.linspace(0, 1, len(maps)))
-    bins = np.arange(-16, 19, 3.2)
+    bins = np.arange(-16, 18, 2)
     for n, map in enumerate(maps):
         try:
             map_np = sitk.GetArrayFromImage(sitk.ReadImage(os.path.join(map_folder,map)))[0, :, :]
             name = os.path.splitext(map)[0]
             map_np_valid = np.extract(dds_mask>0, map_np)
             plt.hist(map_np_valid, bins=bins,
-                    histtype='step', color=color[n], label=name)
+                    histtype='step', color=color[n], density=True, label=name)
             with open(os.path.join(map_folder, 'Result.txt'), 'a') as result_file:
-                result_file.write('{}\t{}\t{}\n'.format(name, map_np_valid.mean(), 2.35*map_np_valid.std()))
+                result_file.write('{}\t{:.2f}\t{:.2f}\n'.format(name, map_np_valid.mean(), 2.35*map_np_valid.std()))
         except:
             pass
+    plt.xlabel('[mm]')
+    plt.title('Range difference')
     plt.legend()
     plt.show()
 
